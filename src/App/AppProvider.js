@@ -9,8 +9,10 @@ export default class AppProvider extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            page: 'dashboard',
             favorites: ['abc-news', 'axios', 'bleacher-report'],
             ...this.savedSettings(),
+            setPage: this.setPage,
             addFavorite: this.addFavorite,
             removeFavorite: this.removeFavorite,
             isInFavorites: this.isInFavorites,
@@ -75,6 +77,10 @@ export default class AppProvider extends React.Component {
 
 
     confirmFavorites = () => {
+        this.setState({
+            firstVisit: false,
+            page: 'dashboard'
+        });  
         localStorage.setItem('newsData', JSON.stringify({
             favorites: this.state.favorites
         }));
@@ -95,6 +101,8 @@ export default class AppProvider extends React.Component {
             favorites
         };
     }
+
+    setPage = page => this.setState({page});
 
     render() {
         return (
