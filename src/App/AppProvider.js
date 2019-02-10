@@ -17,7 +17,8 @@ export default class AppProvider extends React.Component {
             removeFavorite: this.removeFavorite,
             isInFavorites: this.isInFavorites,
             confirmFavorites: this.confirmFavorites,
-            setFilteredSources: this.setFilteredSources
+            setFilteredSources: this.setFilteredSources,
+            setCurrentSource: this.setCurrentSource
         }
     }
 
@@ -62,19 +63,15 @@ export default class AppProvider extends React.Component {
             'X-API-KEY': 'ce530658d8e24415951b95c4c602bb03'
            }
         })
-            .then(response => {
-                console.log(response);
+            .then(response => {                
                 return response.json();
             })
             .then(resJson => {       
                 const sourceList = this.arrayToObject(resJson.sources);                                     
-                this.setState({            
-                    sourceList
-                });
+                this.setState({ sourceList });
             });        
         
     };
-
 
     confirmFavorites = () => {
         this.setState({
@@ -91,7 +88,8 @@ export default class AppProvider extends React.Component {
         if (!newsData) {
             return {
                 page: 'settings',
-                firstVisit: true
+                firstVisit: true,
+                currentSource: null
             };
         }
         let {
@@ -103,6 +101,8 @@ export default class AppProvider extends React.Component {
     }
 
     setPage = page => this.setState({page});
+
+    setCurrentSource = id => this.setState({currentSource: id});
 
     render() {
         return (

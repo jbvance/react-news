@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../App/AppProvider';
-import { DeletableTile } from '../Shared/Tile';
+import { DeletableTile, SelectableTile, SelectedTile } from '../Shared/Tile';
 
 const FavoritesGridStyled = styled.div`
     display: grid;
@@ -23,12 +23,22 @@ const DeleteIcon = styled.span`
 export default (props) => {
     return (
         <AppContext.Consumer>
-            {({favorites, removeFavorite, sourceList}) => (
+            {({favorites, removeFavorite, sourceList, page, setCurrentSource, currentSource}) => (
               
                <FavoritesGridStyled>
-                    {favorites.map(fav => (
-                        <DeletableTile key={fav} onClick={() => removeFavorite(fav)}><DeleteIcon>x</DeleteIcon>{sourceList[fav].name} </DeletableTile>
-                    ))}
+                    {favorites.map(fav => {
+                        if (page === 'settings') {
+                            return <DeletableTile key={fav} onClick={() => removeFavorite(fav)}><DeleteIcon>x</DeleteIcon>{sourceList[fav].name} </DeletableTile>
+                        } else if (fav === currentSource) {
+                            return (
+                                <SelectedTile key={fav}>{sourceList[fav].name}</SelectedTile>
+                            );
+                        }  else {                            
+                            return (
+                                <SelectableTile key={fav} onClick={() => setCurrentSource(fav)}>{sourceList[fav].name}</SelectableTile>
+                            )
+                        }
+                    })}
                </FavoritesGridStyled>
             )}
         </AppContext.Consumer>
