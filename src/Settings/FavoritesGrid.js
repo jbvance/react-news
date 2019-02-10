@@ -23,11 +23,11 @@ const DeleteIcon = styled.span`
 export default (props) => {
     return (
         <AppContext.Consumer>
-            {({favorites, removeFavorite}) => (
+            {({favorites, removeFavorite, sourceList}) => (
               
                <FavoritesGridStyled>
                     {favorites.map(fav => (
-                        <DeletableTile key={fav.id} onClick={() => removeFavorite(fav.id)}><DeleteIcon>x</DeleteIcon>{fav.id} - {fav.name} </DeletableTile>
+                        <DeletableTile key={fav} onClick={() => removeFavorite(fav)}><DeleteIcon>x</DeleteIcon>{sourceList[fav].name} </DeletableTile>
                     ))}
                </FavoritesGridStyled>
             )}

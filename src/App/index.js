@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import AppProvider from './AppProvider';
-import Favorites from '../Components/Favorites';
+import AppLayout from './AppLayout';
+import AppBar from './AppBar';
+import Content from '../Shared/Content';
+import Settings from '../Settings';
+import Dashboard from '../Dashboard';
+
 import './App.css';
 
 class App extends Component {
   render() {
-    return (
-      <div className="App">
+    return (     
+      <AppLayout>
         <AppProvider>
-          <Favorites />
+          <AppBar />
+          <Content>
+            <Settings />
+            <Dashboard />
+          </Content>
         </AppProvider>
-      </div>
+      </AppLayout>     
     );
   }
 }

@@ -8,30 +8,10 @@ const MAX_FAVORITES = 10;
 export default class AppProvider extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {           
-            favorites: [{
-                id: 'src-1',
-                name: 'Source 1'
-            },
-            {
-                id: 'src-2',
-                name: 'Source 2'
-            },
-            {
-                id: 'src-3',
-                name: 'Source 3'
-            },
-            {
-                id: 'src-4',
-                name: 'Source 4'
-            },
-            {
-                id: 'src-5',
-                name: 'Source 5'
-            }
-        ],
-            ...this.savedSettings(),            
-            addSource: this.addSource,
+        this.state = {
+            favorites: ['abc-news', 'axios', 'bleacher-report'],
+            ...this.savedSettings(),
+            addFavorite: this.addFavorite,
             removeFavorite: this.removeFavorite,
             isInFavorites: this.isInFavorites,
             confirmFavorites: this.confirmFavorites,
@@ -39,28 +19,62 @@ export default class AppProvider extends React.Component {
         }
     }
 
-    addSource = key => {
+    addFavorite = key => {
         let favorites = [...this.state.favorites];
-        if(favorites.length < MAX_FAVORITES) {
+        if (favorites.length < MAX_FAVORITES) {
             favorites.push(key);
-            this.setState({favorites});
+            this.setState({
+                favorites
+            });
         }
     }
 
     removeFavorite = id => {
-       console.log('REMOVING', id);
+        console.log('REMOVING', id);
         let favorites = [...this.state.favorites];
-        this.setState({favorites: this.state.favorites.filter(fav => fav.id !== id)});       
+        this.setState({
+            favorites: favorites.filter(fav => fav !== id)
+        });
     }
 
     isInFavorites = key => _.includes(this.state.favorites, key);
 
     componentDidMount() {
-        console.log('MOUNTED');
+        this.fetchSources();
     }
-    
 
-    confirmFavorites = () => {              
+    arrayToObject(array) {
+        const returnObj = array.reduce((obj, item) => {           
+            obj[item.id] = item;
+            return obj;
+          }, {});
+
+        console.log('returnObj', returnObj);
+        return returnObj;
+    }
+
+    fetchSources = async () => {        
+        const url = 'https://newsapi.org/v2/sources?language=en&country=us';
+        fetch(url, {
+           headers: {
+            'X-API-KEY': 'ce530658d8e24415951b95c4c602bb03'
+           }
+        })
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
+            .then(resJson => {       
+                const sourceList = this.arrayToObject(resJson.sources);                                     
+                this.setState({            
+                    sourceList
+                });
+            });        
+        
+    };
+
+
+    confirmFavorites = () => {
         localStorage.setItem('newsData', JSON.stringify({
             favorites: this.state.favorites
         }));
@@ -68,13 +82,20 @@ export default class AppProvider extends React.Component {
 
     savedSettings() {
         let newsData = JSON.parse(localStorage.getItem('newsData'));
-        if(!newsData) {
-            return {};
+        if (!newsData) {
+            return {
+                page: 'settings',
+                firstVisit: true
+            };
         }
-        let { favorites } = newsData;
-        return {favorites};        
-    }    
-    
+        let {
+            favorites
+        } = newsData;
+        return {
+            favorites
+        };
+    }
+
     render() {
         return (
             <AppContext.Provider value={this.state}>
