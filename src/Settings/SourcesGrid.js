@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../App/AppProvider';
-import { SelectableTile } from '../Shared/Tile';
+import { SelectableTile, DisabledTile } from '../Shared/Tile';
 
 const SourcesGridStyled = styled.div`
     display: grid;
@@ -14,14 +14,17 @@ const SourcesGridStyled = styled.div`
 export default (props) => {
     return (
         <AppContext.Consumer>
-            {({sourceList, addFavorite}) => (
-              
+            {({sourceList, addFavorite, isInFavorites}) => {  
+              let TileClass = SelectableTile;                      
+              return (
                <SourcesGridStyled>
-                    {Object.keys(sourceList).map(key => (
-                        <SelectableTile key={key} onClick={() => addFavorite(key)}>{sourceList[key].name} </SelectableTile>
-                    ))}
+                    {Object.keys(sourceList).map(key => {
+                        const TileClass = isInFavorites(key) ? DisabledTile : SelectableTile                    
+                            return <TileClass key={key} onClick={() => addFavorite(key)}>{sourceList[key].name} </TileClass>                     
+                    })}
                </SourcesGridStyled>
-            )}
+              );
+            }}
         </AppContext.Consumer>
     );
 }
