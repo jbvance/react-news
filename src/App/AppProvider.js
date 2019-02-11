@@ -51,9 +51,7 @@ export default class AppProvider extends React.Component {
         const returnObj = array.reduce((obj, item) => {           
             obj[item.id] = item;
             return obj;
-          }, {});
-
-        console.log('returnObj', returnObj);
+          }, {});       
         return returnObj;
     }
 
@@ -97,7 +95,14 @@ export default class AppProvider extends React.Component {
                 return response.json();
             })
             .then(resJson => {       
-                const headlines = resJson;                                     
+                const articles = resJson.articles;    
+                let headlines= {};
+                for (let article of articles) {
+                    if (!headlines[article.source.id]) {
+                        headlines[article.source.id] = [];
+                    }
+                    headlines[article.source.id].push(article);        
+                }                                 
                 this.setState({ headlines });
             });
 
