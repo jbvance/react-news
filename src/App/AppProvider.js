@@ -13,6 +13,7 @@ export default class AppProvider extends React.Component {
             favorites: ['abc-news', 'axios', 'bleacher-report'],
             ...this.savedSettings(),
             setPage: this.setPage,
+            credentials: 'ce530658d8e24415951b95c4c602bb03',
             addFavorite: this.addFavorite,
             removeFavorite: this.removeFavorite,
             isInFavorites: this.isInFavorites,
@@ -60,7 +61,7 @@ export default class AppProvider extends React.Component {
         const url = 'https://newsapi.org/v2/sources?language=en&country=us';
         fetch(url, {
            headers: {
-            'X-API-KEY': 'ce530658d8e24415951b95c4c602bb03'
+            'X-API-KEY': this.state.credentials
            }
         })
             .then(response => {                
@@ -77,10 +78,29 @@ export default class AppProvider extends React.Component {
         this.setState({
             firstVisit: false,
             page: 'dashboard'
-        });  
+        }, () => this.fetchHeadlines());  
         localStorage.setItem('newsData', JSON.stringify({
             favorites: this.state.favorites
         }));
+    }
+
+    fetchHeadlines =  async () => {
+        console.log('favs', this.state.favorites);
+        let sources = this.state.favorites.join(',');
+        const url = `https://newsapi.org/v2/top-headlines?sources=${sources}&pageSize=100`;
+        fetch(url, {
+           headers: {
+            'X-API-KEY': this.state.credentials
+           }
+        })
+            .then(response => {                
+                return response.json();
+            })
+            .then(resJson => {       
+                const headlines = resJson;                                     
+                this.setState({ headlines });
+            });
+
     }
 
     savedSettings() {
