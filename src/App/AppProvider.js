@@ -19,7 +19,8 @@ export default class AppProvider extends React.Component {
             isInFavorites: this.isInFavorites,
             confirmFavorites: this.confirmFavorites,
             setFilteredSources: this.setFilteredSources,
-            setCurrentSource: this.setCurrentSource
+            setCurrentSource: this.setCurrentSource,
+            getSourceHeadlines: this.getSourceHeadlines
         }
     }
 
@@ -45,6 +46,7 @@ export default class AppProvider extends React.Component {
 
     componentDidMount() {
         this.fetchSources();
+        this.fetchHeadlines();
     }
 
     arrayToObject(array) {
@@ -106,6 +108,10 @@ export default class AppProvider extends React.Component {
                 this.setState({ headlines });
             });
 
+    }
+
+    getSourceHeadlines(sourceId) {
+        return this.state.headlines[sourceId];
     }
 
     savedSettings() {
