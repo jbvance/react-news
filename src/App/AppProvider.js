@@ -21,7 +21,8 @@ export default class AppProvider extends React.Component {
             confirmFavorites: this.confirmFavorites,
             setFilteredSources: this.setFilteredSources,
             setCurrentSource: this.setCurrentSource,
-            getSourceHeadlines: this.getSourceHeadlines
+            getSourceHeadlines: this.getSourceHeadlines,
+            checkFavorites: this.checkFavorites
         }
     }
 
@@ -38,11 +39,41 @@ export default class AppProvider extends React.Component {
     removeFavorite = id => {       
         let favorites = [...this.state.favorites];
         let headlines = {...this.state.headlines};
-        delete headlines[id];
+        console.log(this.state.currentSource === id);
+        const currentSource = this.state.currentSource === id ? null : this.state.currentSource;
+        delete headlines[id];        
         this.setState({
             favorites: favorites.filter(fav => fav !== id),
-            headlines
+            headlines,
+            currentSource
         });
+    }
+
+    checkFavorites = () => {
+        // If user is on favorites and goes back to dashboard, we need to check and verify whether any
+        // favorites have been added or removed; if so, call fetchHeadlines to get lastest headlines
+        console.log("THIS", this);
+        const favorites = [...this.state.favorites];
+        let headlines = {...this.state.headlines};
+        let refresh = false;
+        //First, check if any favorites have been added
+        for (let fav of favorites) {
+            if(!headlines[fav]) {
+                //console.log('found fav not in headlines object');
+                refresh = true;
+                break;
+            }
+        }
+        if (refresh) return this.confirmFavorites();
+        // Now check and see if any favorites have been removed
+        for(let source in headlines) {           
+            if (favorites.indexOf(source) < 0) {
+                //console.log('found a removed source');
+                refresh = true;
+                break;
+            }
+        }
+        if (refresh) this.confirmFavorites();
     }
 
     isInFavorites = key => _.includes(this.state.favorites, key);
@@ -134,7 +165,11 @@ export default class AppProvider extends React.Component {
         return { favorites };
     }
 
-    setPage = page => this.setState({page});
+    setPage = page => this.setState({page}, () => {
+        if (page === 'dashboard') {
+            this.checkFavorites();
+        }
+    });
 
     setCurrentSource = id => this.setState({currentSource: id});
 

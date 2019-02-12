@@ -6,7 +6,7 @@ export default ({ name, children }) => {
         {({page}) => {
         if (page !== name) {
             return null;
-        }
+        }            
             return <div>{children}</div>
         }}
     </AppContext.Consumer>

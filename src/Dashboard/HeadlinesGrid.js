@@ -9,7 +9,7 @@ const HeadlinesGridStyled = styled.div`
     margin-top: 40px;
 `;
 
-const getHeadlines = (currentSource, headlines) => {
+const getHeadlines = (currentSource, headlines) => {   
     return headlines[currentSource].map((headline, index) => {
         return (
             <Headline key={index} headline={headline} />
