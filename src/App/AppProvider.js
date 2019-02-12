@@ -130,12 +130,8 @@ export default class AppProvider extends React.Component {
                 currentSource: null
             };
         }
-        let {
-            favorites
-        } = newsData;
-        return {
-            favorites
-        };
+        let { favorites } = newsData;
+        return { favorites };
     }
 
     setPage = page => this.setState({page});
