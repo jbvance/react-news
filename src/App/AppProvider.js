@@ -10,10 +10,11 @@ export default class AppProvider extends React.Component {
         super(props);
         this.state = {
             page: 'dashboard',
-            favorites: ['abc-news', 'axios', 'bleacher-report'],
+            favorites: [],
             ...this.savedSettings(),
             setPage: this.setPage,
             credentials: 'ce530658d8e24415951b95c4c602bb03',
+            favError: '',
             addFavorite: this.addFavorite,
             removeFavorite: this.removeFavorite,
             isInFavorites: this.isInFavorites,
@@ -34,11 +35,13 @@ export default class AppProvider extends React.Component {
         }
     }
 
-    removeFavorite = id => {
-        console.log('REMOVING', id);
+    removeFavorite = id => {       
         let favorites = [...this.state.favorites];
+        let headlines = {...this.state.headlines};
+        delete headlines[id];
         this.setState({
-            favorites: favorites.filter(fav => fav !== id)
+            favorites: favorites.filter(fav => fav !== id),
+            headlines
         });
     }
 
@@ -75,9 +78,13 @@ export default class AppProvider extends React.Component {
     };
 
     confirmFavorites = () => {
+        if (this.state.favorites.length === 0) {
+            return this.setState({favError: 'Please select between one and ten favorites to continue'})
+        }
         this.setState({
             firstVisit: false,
-            page: 'dashboard'
+            page: 'dashboard',
+            favError: ''
         }, () => this.fetchHeadlines());  
         localStorage.setItem('newsData', JSON.stringify({
             favorites: this.state.favorites
@@ -85,7 +92,7 @@ export default class AppProvider extends React.Component {
     }
 
     fetchHeadlines =  async () => {
-        console.log('favs', this.state.favorites);
+       if (!this.state.favorites || this.state.favorites.length === 0) return;
         let sources = this.state.favorites.join(',');
         const url = `https://newsapi.org/v2/top-headlines?sources=${sources}&pageSize=100`;
         fetch(url, {

@@ -21,16 +21,22 @@ const getHeadlines = (currentSource, headlines) => {
 export default (props) => {
     return (
         <AppContext.Consumer>
-            {({currentSource,  headlines}) => (
-                
-                <HeadlinesGridStyled>
-                { currentSource
-                    ? getHeadlines(currentSource, headlines)
-                    :  <div>Please select a source above to show headlines</div>
+            {({currentSource,  headlines}) => {                
+                if(!headlines || Object.keys(headlines).length === 0) {
+                    return (
+                        <div>You currently have no sources selected. Please select one or more sources from the 'Settings' page.</div>
+                    )
+                }                
+                return(
+                    <HeadlinesGridStyled>
+                    { currentSource
+                        ? getHeadlines(currentSource, headlines)
+                        :  <div>Please select a source above to show headlines</div>
 
-                  }
-                </HeadlinesGridStyled>
-            )}
+                    }
+                    </HeadlinesGridStyled>
+                )
+            }}
         </AppContext.Consumer>
     );
 }

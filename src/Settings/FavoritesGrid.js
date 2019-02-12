@@ -20,11 +20,16 @@ const DeleteIcon = styled.span`
     }
 `;
 
+const FavError = styled.h3`
+    color: red;
+`;
+
 export default (props) => {
     return (
         <AppContext.Consumer>
-            {({favorites, removeFavorite, sourceList, page, setCurrentSource, currentSource}) => (
-              
+            {({favorites, removeFavorite, sourceList, page, setCurrentSource, currentSource, favError}) => {
+             
+             return (
                <FavoritesGridStyled>
                     {favorites.map(fav => {
                         if (page === 'settings') {
@@ -40,7 +45,7 @@ export default (props) => {
                         }
                     })}
                </FavoritesGridStyled>
-            )}
+            )}}
         </AppContext.Consumer>
     );
 }

@@ -4,7 +4,7 @@ import { color3, fontSize2, fontColorBlack } from '../Shared/Styles';
 
 const HeadlineStyled = styled.div`
     display: flex;
-    border: 1px solid ${color3};
+    border: 1px solid #000;
     margin: 10px 0;
     border-radius: 10px;
 
@@ -31,13 +31,12 @@ const HeadlineTitleStyled = styled(HeadlineTextItemStyled)`
 const ImageDivStyled = styled.div`
       display: flex;
       align-items: center;      
-      margin-right: 10px;
-      width: 250px;
+      margin-right: 10px     
+      min-width: 150px;
 `;
 
 const ResponsiveImage = styled.img`
-    width: 100%;
-    max-width: 200px;    
+    width: 125px;    
     height: auto;
     padding: 5px;
     border-radius: 10px;

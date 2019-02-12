@@ -7,6 +7,6 @@ import HeadlinesGrid from './HeadlinesGrid';
 export default () => (
     <Page name="dashboard">
         <FavoritesGrid />
-       <HeadlinesGrid />
+        <HeadlinesGrid />
     </Page>
 );
