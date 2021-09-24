@@ -13,7 +13,7 @@ export default class AppProvider extends React.Component {
             favorites: [],
             ...this.savedSettings(),
             setPage: this.setPage,
-            credentials: 'ce530658d8e24415951b95c4c602bb03',
+            credentials: '[INSERT API KEY HERE]',
             favError: '',
             addFavorite: this.addFavorite,
             removeFavorite: this.removeFavorite,
